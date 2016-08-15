@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router';
-import DescriptionField from '~/components/description_field';
+import DescriptionField from '~/components/hashtag_autocompletion_field';
 
 export class Uploader extends Component {
 

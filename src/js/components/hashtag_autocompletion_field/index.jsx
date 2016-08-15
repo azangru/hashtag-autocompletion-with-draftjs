@@ -20,12 +20,16 @@ export default class DescriptionField extends Component {
        const selection = editorState.getSelection();
        const anchorKey = selection.getAnchorKey();
        const anchorOffset = selection.getAnchorOffset();
-       console.log('anchor offset', anchorOffset);
+    //    console.log('anchor offset', anchorOffset);
 
        const blockKey = selection.getAnchorKey();
        const block = editorState.getCurrentContent().getBlockForKey(blockKey);
        const blockText = block.getText();
-       console.log(blockText.slice(0, anchorOffset));
+       
+       const currentWord = blockText.slice(0, anchorOffset).split(' ').pop();
+       if (currentWord[0] === '#') {
+           console.log('yes!');
+       }
     }
 
 
@@ -40,7 +44,7 @@ export default class DescriptionField extends Component {
                 </div>
                 <div style={{"whiteSpace": "pre-wrap"}}>{this.state.content}</div>
             </div>
-        )
+        );
     }
 
 }
