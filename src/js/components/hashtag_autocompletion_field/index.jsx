@@ -21,7 +21,6 @@ export default class DescriptionField extends Component {
         // tag comment
         // let a = Entity;
         this.setState({editorState});
-            this.setState({content: editorState.getCurrentContent().getPlainText()})
 
 
         // get the current selection
@@ -40,15 +39,14 @@ export default class DescriptionField extends Component {
        }
     }
 
-
     render() {
-
+        // передаем компоненту Editor stipPastedStyles=true, чтобы снимать форматирование с копипасты
         const {editorState} = this.state;
         return (
             <div>
                 <h1>Test Page</h1>
                 <div className="editor-container">
-                    <Editor editorState={editorState} onChange={this.onChange} />
+                    <Editor editorState={editorState} onChange={this.onChange} stripPastedStyles={true} />
                 </div>
                 <div style={{"whiteSpace": "pre-wrap"}}>{this.state.content}</div>
             </div>
