@@ -50,7 +50,8 @@ export default class DescriptionField extends Component {
 
     onChange(editorState) {
         this.setState({editorState});
-        this.setState({content: editorState.getCurrentContent().getPlainText()})
+        // this.setState({content: editorState.getCurrentContent().getPlainText()})
+
 
 
         // get the current selection
@@ -121,11 +122,11 @@ export default class DescriptionField extends Component {
     }
 
     closePopover() {
-        this.setState({displayPopover: false});
+        // this.setState({displayPopover: false});
     }
 
     render() {
-
+        // передаем компоненту Editor stipPastedStyles=true, чтобы снимать форматирование с копипасты
         const {editorState} = this.state;
         const popoverStyles = Object.assign({}, this.state.styles.popover);
 
@@ -133,7 +134,7 @@ export default class DescriptionField extends Component {
             <div>
                 <h1>Test Page</h1>
                 <div className="editor-container" style={styles.editorContainer}>
-                    <Editor editorState={editorState} onChange={this.onChange} openPopover={this.openPopover} />
+                    <Editor editorState={editorState} onChange={this.onChange} stripPastedStyles={true} />
                     { this.state.displayPopover ? (
                         <HashtagBox style={popoverStyles} suggestions={this.state.autocompleteSuggestions} />
                         ) : null
