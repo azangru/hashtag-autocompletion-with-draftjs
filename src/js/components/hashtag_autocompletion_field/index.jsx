@@ -2,11 +2,13 @@ import React, {Component} from 'react';
 import {Editor, EditorState, CompositeDecorator, ContentState, Entity} from 'draft-js';
 import decorateComponentWithProps from './utils/decorate_component_with_props';
 import decodeOffsetKey from './utils/decode_offset_key';
+import getAutocompleteSuggestions from './utils/getAutocompleteSuggestions';
 import HashtagWrapper from './hashtag_wrapper';
+import HashtagBox from './hashtag_box';
 
 const callbacks = {
     updateCoordinates: (offsetKey, coordinates) => {
-        console.log('updating coordinates')
+        console.log('updating coordinates', coordinates);
         store.coordinates[offsetKey] = coordinates;
     },
     getSearchText: () => {
@@ -36,17 +38,19 @@ export default class DescriptionField extends Component {
           ]);
 
         // this.state = {editorState: EditorState.createEmpty(compositeDecorator)}; // если нет предварительного содержимого
-        const contentState = ContentState.createFromText('hello #world, nice to meet you!');
-        this.state = {editorState: EditorState.createWithContent(contentState, compositeDecorator)};
+        const contentState = ContentState.createFromText('hello #world, nice to meet you! #lol');
+        this.state = {
+            editorState: EditorState.createWithContent(contentState, compositeDecorator),
+            autocompleteSuggestions: [],
+            styles: styles
+        };
         this.onChange = this.onChange.bind(this);
         this.openPopover = this.openPopover.bind(this);
     }
 
     onChange(editorState) {
-        // tag comment
-        // let a = Entity;
         this.setState({editorState});
-            this.setState({content: editorState.getCurrentContent().getPlainText()})
+        this.setState({content: editorState.getCurrentContent().getPlainText()})
 
 
         // get the current selection
@@ -61,44 +65,59 @@ export default class DescriptionField extends Component {
         const block = editorState.getCurrentContent().getBlockForKey(blockKey);
         const blockText = block.getText();
 
-        const offsetDetails = Object.keys(store.coordinates).map((offsetKey) => decodeOffsetKey(offsetKey));
+        const offsetDetails = Object.keys(store.coordinates).map((offsetKey) => ({originalKey: offsetKey, decodedKey: decodeOffsetKey(offsetKey)}));
         const leaves = offsetDetails
-            .filter(({ blockKey }) => blockKey === anchorKey)
-            .map(({ blockKey, decoratorKey, leafKey }) => (
-                editorState
+            .filter((obj) => obj.decodedKey.blockKey === anchorKey)
+            .map((obj) => {
+                const {blockKey, decoratorKey, leafKey} = obj.decodedKey;
+                obj.leaf = editorState
                     .getBlockTree(blockKey)
-                    .getIn([decoratorKey, 'leaves', leafKey])
-            ));
+                    .getIn([decoratorKey, 'leaves', leafKey]);
+                return obj;
+            });
         const selectionIsInsideWord = leaves
-            .filter((leaf) => leaf !== undefined)
-            .map(({ start, end }) => (
-                start === 0 && anchorOffset === 1 && anchorOffset <= end || // @ is the first character
+            .filter(({leaf}) => leaf !== undefined)
+            .filter((obj) => {
+                const { start, end } = obj.leaf;
+                return start === 0 && anchorOffset === 1 && anchorOffset <= end || // @ is the first character
                 anchorOffset > start + 1 && anchorOffset <= end // @ is in the text or at the end
-            ));
-        console.log('selection inside word', selectionIsInsideWord);
-        // this.activeOffsetKey = selectionIsInsideWord
-        //     .filter(value => value === true)
-        //     .keySeq()
-        //     .first();
-        // console.log('activeOffsetKey', this.activeOffsetKey);
+            })
+            .map((obj) => {
+                const { start, end } = obj.leaf;
+                const search = blockText.slice(start + 1, end);
+                console.log('search term', search);
+                obj.search = search;
+                return obj;
+            });
 
+        this.activeOffsetKey = selectionIsInsideWord[0] && selectionIsInsideWord[0].originalKey;
 
 
         const currentWord = blockText.slice(0, anchorOffset).split(' ').pop();
         if (currentWord[0] === '#') {
-            console.log('yes!');
-            if (store.coordinates) {
-                this.openPopover();
+            if (store.coordinates[this.activeOffsetKey]) {
+                console.log('yes!', this.activeOffsetKey);
+                getAutocompleteSuggestions(selectionIsInsideWord[0].search).then((data) => {
+                    return this.openPopover(data[1], this.activeOffsetKey)
+                });
             }
         } else {
             this.closePopover();
         }
     }
 
-    openPopover() {
-        // styles.popover.top = store.coordinates.top + 15;
-        // styles.popover.left = store.coordinates.left;
-        // this.setState({displayPopover: true});
+    openPopover(suggestions, coordinatesKey) {
+        const currentStyles = this.state.styles;
+        const popoverStyles = currentStyles.popover;
+        popoverStyles.top = store.coordinates[coordinatesKey].top + 15;
+        popoverStyles.left = store.coordinates[coordinatesKey].left;
+        const updatedStyles = Object.assign({}, currentStyles, {popover: popoverStyles});
+
+        this.setState({
+            displayPopover: true,
+            autocompleteSuggestions: suggestions,
+            styles: updatedStyles
+        });
     }
 
     closePopover() {
@@ -108,13 +127,15 @@ export default class DescriptionField extends Component {
     render() {
 
         const {editorState} = this.state;
+        const popoverStyles = Object.assign({}, this.state.styles.popover);
+
         return (
             <div>
                 <h1>Test Page</h1>
                 <div className="editor-container" style={styles.editorContainer}>
                     <Editor editorState={editorState} onChange={this.onChange} openPopover={this.openPopover} />
                     { this.state.displayPopover ? (
-                        <div style={styles.popover}></div>
+                        <HashtagBox style={popoverStyles} suggestions={this.state.autocompleteSuggestions} />
                         ) : null
                     }
                 </div>
@@ -152,7 +173,3 @@ const styles = {
         height: '50px'
     },
 };
-
-// const HashtagSpan = (props) => {
-//     return <span {...props} style={styles.hashtag}>{props.children}</span>;
-// };
