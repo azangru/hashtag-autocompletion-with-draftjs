@@ -22,7 +22,7 @@ const store = {
 
 const hashtagWrapperProps = {
     updateCoordinates: callbacks.updateCoordinates
-}
+};
 
 
 export default class DescriptionField extends Component {
@@ -81,7 +81,7 @@ export default class DescriptionField extends Component {
             .filter((obj) => {
                 const { start, end } = obj.leaf;
                 return start === 0 && anchorOffset === 1 && anchorOffset <= end || // @ is the first character
-                anchorOffset > start + 1 && anchorOffset <= end // @ is in the text or at the end
+                anchorOffset > start + 1 && anchorOffset <= end; // @ is in the text or at the end
             })
             .map((obj) => {
                 const { start, end } = obj.leaf;
@@ -99,7 +99,7 @@ export default class DescriptionField extends Component {
             if (store.coordinates[this.activeOffsetKey]) {
                 console.log('yes!', this.activeOffsetKey);
                 getAutocompleteSuggestions(selectionIsInsideWord[0].search).then((data) => {
-                    return this.openPopover(data[1], this.activeOffsetKey)
+                    return this.openPopover(data[1], this.activeOffsetKey);
                 });
             }
         } else {
@@ -169,8 +169,8 @@ const styles = {
     },
     popover: {
         position: 'absolute',
-        background: 'yellow',
-        width: '100px',
-        height: '50px'
+        background: 'white',
+        border: '1px solid black',
+        padding: '6px'
     },
 };

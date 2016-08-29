@@ -2,18 +2,19 @@ import React, {Component} from 'react';
 
 class HashtagWrapper extends Component {
 
+    // notable props are decoratedText (contains the text inside the decorator)
+    // and offsetKey (contains the key of the decorated region)
     constructor(props) {
         super(props);
-        console.log(props);
     }
 
+    // may also use this.wrapperElement.getBoundingClientRect() for finding coordinates
+    // of the decorating element
     componentDidMount() {
-        // this.props.updateCoordinates(this.wrapperElement.getBoundingClientRect());
         this.props.updateCoordinates(this.props.offsetKey, {top: this.wrapperElement.offsetTop, left: this.wrapperElement.offsetLeft});
     }
 
     componentDidUpdate() {
-        // this.props.updateCoordinates(this.wrapperElement.getBoundingClientRect());
         this.props.updateCoordinates(this.props.offsetKey, {top: this.wrapperElement.offsetTop, left: this.wrapperElement.offsetLeft});
     }
 
@@ -32,7 +33,7 @@ class HashtagWrapper extends Component {
 
 const styles = {
     hashtag: {
-        color: 'rgba(95, 184, 138, 1.0)',
+        color: 'dodgerblue',
     },
 };
 
