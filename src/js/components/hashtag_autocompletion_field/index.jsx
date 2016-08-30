@@ -11,8 +11,8 @@ const callbacks = {
         console.log('updating coordinates', coordinates);
         store.coordinates[offsetKey] = coordinates;
     },
-    getSearchText: () => {
-
+    onHashtagClick: () => {
+        debugger;
     }
 };
 
