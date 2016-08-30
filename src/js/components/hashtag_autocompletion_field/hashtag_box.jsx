@@ -3,7 +3,7 @@ import HashtagSuggestion from './hashtag_suggestion';
 
 const HashtagBox = (props) => {
     const suggestions = props.suggestions.map((suggestion, index) => (
-        <HashtagSuggestion key={index} suggestion={suggestion} />
+        <HashtagSuggestion key={index} suggestion={suggestion} onHashtagClick={props.onHashtagClick} />
     ));
 
     return (

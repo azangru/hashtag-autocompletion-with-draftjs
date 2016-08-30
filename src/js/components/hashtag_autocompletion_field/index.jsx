@@ -3,6 +3,7 @@ import {Editor, EditorState, CompositeDecorator, ContentState, Entity} from 'dra
 import decorateComponentWithProps from './utils/decorate_component_with_props';
 import decodeOffsetKey from './utils/decode_offset_key';
 import getAutocompleteSuggestions from './utils/getAutocompleteSuggestions';
+import insertHashtag from './utils/insert_hashtag';
 import HashtagWrapper from './hashtag_wrapper';
 import HashtagBox from './hashtag_box';
 
@@ -10,9 +11,6 @@ const callbacks = {
     updateCoordinates: (offsetKey, coordinates) => {
         console.log('updating coordinates', coordinates);
         store.coordinates[offsetKey] = coordinates;
-    },
-    onHashtagClick: () => {
-        debugger;
     }
 };
 
@@ -46,6 +44,7 @@ export default class DescriptionField extends Component {
         };
         this.onChange = this.onChange.bind(this);
         this.openPopover = this.openPopover.bind(this);
+        this.onHashtagClick = this.onHashtagClick.bind(this);
     }
 
     onChange(editorState) {
@@ -122,7 +121,11 @@ export default class DescriptionField extends Component {
     }
 
     closePopover() {
-        // this.setState({displayPopover: false});
+        this.setState({displayPopover: false});
+    }
+
+    onHashtagClick(hashtag) {
+        console.log(hashtag);
     }
 
     render() {
@@ -136,7 +139,7 @@ export default class DescriptionField extends Component {
                 <div className="editor-container" style={styles.editorContainer}>
                     <Editor editorState={editorState} onChange={this.onChange} stripPastedStyles={true} />
                     { this.state.displayPopover ? (
-                        <HashtagBox style={popoverStyles} suggestions={this.state.autocompleteSuggestions} />
+                        <HashtagBox style={popoverStyles} suggestions={this.state.autocompleteSuggestions} onHashtagClick={this.onHashtagClick} />
                         ) : null
                     }
                 </div>
