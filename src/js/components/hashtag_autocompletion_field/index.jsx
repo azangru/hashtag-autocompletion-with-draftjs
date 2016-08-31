@@ -1,21 +1,22 @@
 import React, {Component} from 'react';
 import {Editor, EditorState, CompositeDecorator, ContentState, Entity} from 'draft-js';
 import decorateComponentWithProps from './utils/decorate_component_with_props';
-import decodeOffsetKey from './utils/decode_offset_key';
 import getAutocompleteSuggestions from './utils/getAutocompleteSuggestions';
 import insertHashtag from './utils/insert_hashtag';
+import locateHashtagInText from './utils/locate_hashtag_in_text';
 import HashtagWrapper from './hashtag_wrapper';
 import HashtagBox from './hashtag_box';
 
 const callbacks = {
     updateCoordinates: (offsetKey, coordinates) => {
         console.log('updating coordinates', coordinates);
-        store.coordinates[offsetKey] = coordinates;
+        store.hashtagsInText[offsetKey] = {coordinates};
     }
 };
 
 const store = {
-    coordinates: {}
+    // a dictionary of hashtags, by their block keys
+    hashtagsInText: {}
 };
 
 const hashtagWrapperProps = {
@@ -51,66 +52,24 @@ export default class DescriptionField extends Component {
         this.setState({editorState});
         // this.setState({content: editorState.getCurrentContent().getPlainText()})
 
+        const hashtagInfo = locateHashtagInText(editorState, store);
+        this.hashtagInfo = hashtagInfo;
 
-
-        // get the current selection
-        const selection = editorState.getSelection();
-        const anchorKey = selection.getAnchorKey();
-        const anchorOffset = selection.getAnchorOffset();
-    //    console.log('anchor offset', anchorOffset);
-
-        const blockKey = selection.getAnchorKey();
-        console.log('blockKey: ', blockKey, 'all keys', Object.keys(store.coordinates), 'tree', editorState.getBlockTree(blockKey), editorState.getBlockTree(blockKey).getIn([1, 'leaves', 0]));
-
-        const block = editorState.getCurrentContent().getBlockForKey(blockKey);
-        const blockText = block.getText();
-
-        const offsetDetails = Object.keys(store.coordinates).map((offsetKey) => ({originalKey: offsetKey, decodedKey: decodeOffsetKey(offsetKey)}));
-        const leaves = offsetDetails
-            .filter((obj) => obj.decodedKey.blockKey === anchorKey)
-            .map((obj) => {
-                const {blockKey, decoratorKey, leafKey} = obj.decodedKey;
-                obj.leaf = editorState
-                    .getBlockTree(blockKey)
-                    .getIn([decoratorKey, 'leaves', leafKey]);
-                return obj;
+        if (hashtagInfo && store.hashtagsInText[hashtagInfo.originalKey]) {
+            console.log('yes!', hashtagInfo.search);
+            getAutocompleteSuggestions(hashtagInfo.search).then((data) => {
+                return this.openPopover(data[1], hashtagInfo.originalKey);
             });
-        const selectionIsInsideWord = leaves
-            .filter(({leaf}) => leaf !== undefined)
-            .filter((obj) => {
-                const { start, end } = obj.leaf;
-                return start === 0 && anchorOffset === 1 && anchorOffset <= end || // @ is the first character
-                anchorOffset > start + 1 && anchorOffset <= end; // @ is in the text or at the end
-            })
-            .map((obj) => {
-                const { start, end } = obj.leaf;
-                const search = blockText.slice(start + 1, end);
-                console.log('search term', search);
-                obj.search = search;
-                return obj;
-            });
-
-        this.activeOffsetKey = selectionIsInsideWord[0] && selectionIsInsideWord[0].originalKey;
-
-
-        const currentWord = blockText.slice(0, anchorOffset).split(' ').pop();
-        if (currentWord[0] === '#') {
-            if (store.coordinates[this.activeOffsetKey]) {
-                console.log('yes!', this.activeOffsetKey);
-                getAutocompleteSuggestions(selectionIsInsideWord[0].search).then((data) => {
-                    return this.openPopover(data[1], this.activeOffsetKey);
-                });
-            }
         } else {
             this.closePopover();
         }
     }
 
-    openPopover(suggestions, coordinatesKey) {
+    openPopover(suggestions, key) {
         const currentStyles = this.state.styles;
         const popoverStyles = currentStyles.popover;
-        popoverStyles.top = store.coordinates[coordinatesKey].top + 15;
-        popoverStyles.left = store.coordinates[coordinatesKey].left;
+        popoverStyles.top = store.hashtagsInText[key].coordinates.top + 15;
+        popoverStyles.left = store.hashtagsInText[key].coordinates.left;
         const updatedStyles = Object.assign({}, currentStyles, {popover: popoverStyles});
 
         this.setState({
@@ -124,8 +83,9 @@ export default class DescriptionField extends Component {
         this.setState({displayPopover: false});
     }
 
-    onHashtagClick(hashtag) {
-        console.log(hashtag);
+    onHashtagClick(fullHashtag) {
+        console.log(fullHashtag);
+        insertHashtag(fullHashtag, this.hashtagInfo, this.state.editorState);
     }
 
     render() {
