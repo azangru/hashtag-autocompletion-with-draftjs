@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Editor, EditorState, CompositeDecorator, ContentState, Entity} from 'draft-js';
+import {Editor, EditorState, CompositeDecorator, ContentState} from 'draft-js';
 import decorateComponentWithProps from './utils/decorate_component_with_props';
 import getAutocompleteSuggestions from './utils/getAutocompleteSuggestions';
 import insertHashtag from './utils/insert_hashtag';
@@ -84,8 +84,8 @@ export default class DescriptionField extends Component {
     }
 
     onHashtagClick(fullHashtag) {
-        console.log(fullHashtag);
-        insertHashtag(fullHashtag, this.hashtagInfo, this.state.editorState);
+        const newEditorState = insertHashtag(fullHashtag, this.hashtagInfo, this.state.editorState);
+        this.setState({editorState: newEditorState});
     }
 
     render() {
