@@ -78,6 +78,7 @@ export default class DescriptionField extends Component {
         this.setState({
             displayPopover: true,
             autocompleteSuggestions: suggestions,
+            focusedHashtagIndex: 0,
             styles: updatedStyles
         });
     }
