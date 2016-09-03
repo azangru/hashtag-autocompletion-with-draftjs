@@ -4,3 +4,15 @@
   padding: 20px;
   border: 1px solid black;
 }
+
+.hashtag-suggestion {
+    padding: 0 6px;
+}
+
+.hashtag-suggestion:not(:first-of-type) {
+    border-top: 1px solid black;
+}
+
+.hashtag-suggestion:hover, .hashtag-suggestion.active {
+    color: dodgerblue;
+}

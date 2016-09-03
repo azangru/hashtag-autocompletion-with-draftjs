@@ -41,11 +41,14 @@ export default class DescriptionField extends Component {
         this.state = {
             editorState: EditorState.createWithContent(contentState, compositeDecorator),
             autocompleteSuggestions: [],
+            focusedHashtagIndex: 0,
             styles: styles
         };
         this.onChange = this.onChange.bind(this);
         this.openPopover = this.openPopover.bind(this);
         this.onHashtagClick = this.onHashtagClick.bind(this);
+        this.onDownArrow = this.onDownArrow.bind(this);
+        this.onEnter = this.onEnter.bind(this);
     }
 
     onChange(editorState) {
@@ -56,7 +59,6 @@ export default class DescriptionField extends Component {
         this.hashtagInfo = hashtagInfo;
 
         if (hashtagInfo && store.hashtagsInText[hashtagInfo.originalKey]) {
-            console.log('yes!', hashtagInfo.search);
             getAutocompleteSuggestions(hashtagInfo.search).then((data) => {
                 return this.openPopover(data[1], hashtagInfo.originalKey);
             });
@@ -88,18 +90,55 @@ export default class DescriptionField extends Component {
         this.setState({editorState: newEditorState});
     }
 
+    onDownArrow(keyboardEvent) {
+      keyboardEvent.preventDefault();
+      this.setState({focusedHashtagIndex: this.state.focusedHashtagIndex + 1});
+    }
+
+    onEnter(keyboardEvent) {
+        keyboardEvent.preventDefault();
+        const selectedHashtag = this.state.autocompleteSuggestions[this.state.focusedHashtagIndex % this.state.autocompleteSuggestions.length];
+        const newEditorState = insertHashtag(selectedHashtag, this.hashtagInfo, this.state.editorState);
+        this.setState({editorState: newEditorState});
+        return true;
+    }
+
     render() {
         // передаем компоненту Editor stipPastedStyles=true, чтобы снимать форматирование с копипасты
         const {editorState} = this.state;
         const popoverStyles = Object.assign({}, this.state.styles.popover);
 
+        const additionalProps = (() => {
+            if (this.state.displayPopover) {
+                return {
+                    onDownArrow: this.onDownArrow,
+                    handleReturn: this.onEnter
+                };
+            } else {
+                return {
+                    onDownArrow: undefined,
+                    handleReturn: undefined
+                };
+            }
+        })();
+
         return (
             <div>
                 <h1>Test Page</h1>
                 <div className="editor-container" style={styles.editorContainer}>
-                    <Editor editorState={editorState} onChange={this.onChange} stripPastedStyles={true} />
+                    <Editor
+                        editorState={editorState}
+                        onChange={this.onChange}
+                        stripPastedStyles={true}
+                        {... additionalProps}
+                    />
                     { this.state.displayPopover ? (
-                        <HashtagBox style={popoverStyles} suggestions={this.state.autocompleteSuggestions} onHashtagClick={this.onHashtagClick} />
+                        <HashtagBox
+                            style={popoverStyles}
+                            suggestions={this.state.autocompleteSuggestions}
+                            onHashtagClick={this.onHashtagClick}
+                            focusedHashtagIndex={this.state.focusedHashtagIndex}
+                         />
                         ) : null
                     }
                 </div>
@@ -134,6 +173,6 @@ const styles = {
         position: 'absolute',
         background: 'white',
         border: '1px solid black',
-        padding: '6px'
+        // padding: '6px'
     },
 };
