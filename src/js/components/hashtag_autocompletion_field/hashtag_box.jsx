@@ -7,7 +7,7 @@ const HashtagBox = (props) => {
             key={index}
             suggestion={suggestion}
             onHashtagClick={props.onHashtagClick}
-            isFocused={props.focusedHashtagIndex % props.suggestions.length === index}
+            isFocused={props.focusedHashtagIndex === index}
         />
     ));
 

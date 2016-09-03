@@ -48,6 +48,7 @@ export default class DescriptionField extends Component {
         this.openPopover = this.openPopover.bind(this);
         this.onHashtagClick = this.onHashtagClick.bind(this);
         this.onDownArrow = this.onDownArrow.bind(this);
+        this.onUpArrow = this.onUpArrow.bind(this);
         this.onEnter = this.onEnter.bind(this);
     }
 
@@ -90,16 +91,28 @@ export default class DescriptionField extends Component {
         this.setState({editorState: newEditorState});
     }
 
+    onUpArrow(keyboardEvent) {
+      keyboardEvent.preventDefault();
+      if (this.state.focusedHashtagIndex - 1 < 0) {
+            this.setState({focusedHashtagIndex: this.state.autocompleteSuggestions.length - 1});
+      } else {
+          this.setState({focusedHashtagIndex: (this.state.focusedHashtagIndex - 1) % this.state.autocompleteSuggestions.length});
+      }
+    }
+
     onDownArrow(keyboardEvent) {
       keyboardEvent.preventDefault();
-      this.setState({focusedHashtagIndex: this.state.focusedHashtagIndex + 1});
+      this.setState({focusedHashtagIndex: (this.state.focusedHashtagIndex + 1) % this.state.autocompleteSuggestions.length});
     }
 
     onEnter(keyboardEvent) {
         keyboardEvent.preventDefault();
-        const selectedHashtag = this.state.autocompleteSuggestions[this.state.focusedHashtagIndex % this.state.autocompleteSuggestions.length];
+        const selectedHashtag = this.state.autocompleteSuggestions[this.state.focusedHashtagIndex];
         const newEditorState = insertHashtag(selectedHashtag, this.hashtagInfo, this.state.editorState);
-        this.setState({editorState: newEditorState});
+        this.setState({
+            editorState: newEditorState,
+            displayPopover: false
+        });
         return true;
     }
 
@@ -112,11 +125,13 @@ export default class DescriptionField extends Component {
             if (this.state.displayPopover) {
                 return {
                     onDownArrow: this.onDownArrow,
+                    onUpArrow: this.onUpArrow,
                     handleReturn: this.onEnter
                 };
             } else {
                 return {
                     onDownArrow: undefined,
+                    onUpArrow: undefined,
                     handleReturn: undefined
                 };
             }
