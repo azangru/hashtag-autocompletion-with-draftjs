@@ -9,14 +9,14 @@ import HashtagBox from './hashtag_box';
 
 const callbacks = {
     updateCoordinates: (offsetKey, coordinates) => {
-        console.log('updating coordinates', coordinates);
         store.hashtagsInText[offsetKey] = {coordinates};
     }
 };
 
 const store = {
     // a dictionary of hashtags, by their block keys
-    hashtagsInText: {}
+    hashtagsInText: {},
+    editorFocused: true
 };
 
 const hashtagWrapperProps = {
@@ -42,6 +42,7 @@ export default class DescriptionField extends Component {
             editorState: EditorState.createWithContent(contentState, compositeDecorator),
             autocompleteSuggestions: [],
             focusedHashtagIndex: 0,
+            editorFocused: true,
             styles: styles
         };
         this.onChange = this.onChange.bind(this);
@@ -50,6 +51,8 @@ export default class DescriptionField extends Component {
         this.onDownArrow = this.onDownArrow.bind(this);
         this.onUpArrow = this.onUpArrow.bind(this);
         this.onEnter = this.onEnter.bind(this);
+        this.onBlur = this.onBlur.bind(this);
+        this.onFocus = this.onFocus.bind(this);
     }
 
     onChange(editorState) {
@@ -59,7 +62,7 @@ export default class DescriptionField extends Component {
         const hashtagInfo = locateHashtagInText(editorState, store);
         this.hashtagInfo = hashtagInfo;
 
-        if (hashtagInfo && store.hashtagsInText[hashtagInfo.originalKey]) {
+        if (store.editorFocused && hashtagInfo && store.hashtagsInText[hashtagInfo.originalKey]) {
             getAutocompleteSuggestions(hashtagInfo.search).then((data) => {
                 return this.openPopover(data[1], hashtagInfo.originalKey);
             });
@@ -117,6 +120,16 @@ export default class DescriptionField extends Component {
         return true;
     }
 
+    onFocus() {
+        store.editorFocused = true;
+    }
+
+    // initially, tried to use store the editorFocused property in the state by doing this.setState,
+    // but setState is asynchronous, so I chose a synchronous mechanism
+    onBlur() {
+        store.editorFocused = false;
+    }
+
     render() {
         // передаем компоненту Editor stipPastedStyles=true, чтобы снимать форматирование с копипасты
         const {editorState} = this.state;
@@ -127,13 +140,17 @@ export default class DescriptionField extends Component {
                 return {
                     onDownArrow: this.onDownArrow,
                     onUpArrow: this.onUpArrow,
-                    handleReturn: this.onEnter
+                    handleReturn: this.onEnter,
+                    onBlur: this.onBlur,
+                    onFocus: this.onFocus
                 };
             } else {
                 return {
                     onDownArrow: undefined,
                     onUpArrow: undefined,
-                    handleReturn: undefined
+                    handleReturn: undefined,
+                    onBlur: this.onBlur,
+                    onFocus: this.onFocus
                 };
             }
         })();
