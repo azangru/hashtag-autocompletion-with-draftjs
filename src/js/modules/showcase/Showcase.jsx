@@ -10,8 +10,8 @@ export class Uploader extends Component {
     render() {
         return (
             <div>
-                Это страница витрины
-                <Link to={'/uploader'}>На страницу загрузчика</Link>
+                This is the main page <br />
+                <Link to={'/uploader'}>Check out the page with hashtag autocompletion</Link>
             </div>
         );
     }

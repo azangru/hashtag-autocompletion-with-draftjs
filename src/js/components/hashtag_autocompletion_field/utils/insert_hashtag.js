@@ -13,7 +13,7 @@ const insertHashtag = (fullHashtag, hashtagInfo, editorState) => {
         replacedContent,
         'insert-hashtag'
     );
-    return newEditorState;
+    return EditorState.forceSelection(newEditorState, replacedContent.getSelectionAfter());
 };
 
 

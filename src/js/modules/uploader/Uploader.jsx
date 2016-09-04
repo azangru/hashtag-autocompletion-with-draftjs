@@ -11,8 +11,8 @@ export class Uploader extends Component {
     render() {
         return (
             <div>
-                Это страница загрузчика
-                <Link to={'/'}>На витрину</Link>
+                This is a page containing a field with hashtags autocompletion <br />
+                <Link to={'/'}>Go back to the main page</Link>
                 <DescriptionField />
             </div>
         );

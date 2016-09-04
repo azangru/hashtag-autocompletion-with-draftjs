@@ -1,4 +1,4 @@
-const url = 'http://en.wikipedia.org/w/api.php?action=opensearch&origin=*&format=json&search='
+const url = 'http://en.wikipedia.org/w/api.php?action=opensearch&origin=*&format=json&search=';
 
 const cachedSearches = {};
 

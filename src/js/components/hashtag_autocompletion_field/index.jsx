@@ -72,7 +72,7 @@ export default class DescriptionField extends Component {
             return;
         }
 
-        if (store.editorFocused &&
+        if (this.state.editorFocused &&
             hashtagInfo &&
             hashtagInfo.originalKey !== store.escapeKey &&
             store.hashtagsInText[hashtagInfo.originalKey]) {
@@ -105,9 +105,16 @@ export default class DescriptionField extends Component {
     }
 
     onHashtagClick(fullHashtag) {
-        console.log('hey!')
         const newEditorState = insertHashtag(fullHashtag, this.hashtagInfo, this.state.editorState);
-        this.setState({editorState: newEditorState});
+        this.setState({
+            editorState: newEditorState
+        });
+        setTimeout(() => {
+            this.setState({
+                editorFocused: true,
+            });
+        }, 50);
+
     }
 
     onUpArrow(keyboardEvent) {
@@ -144,11 +151,18 @@ export default class DescriptionField extends Component {
     // initially, tried to store the editorFocused property in the component’s state
     // by doing this.setState, but .setState() is asynchronous, so I chose a synchronous mechanism
     onBlur() {
-        store.editorFocused = false;
+        setTimeout(() => {
+            this.setState({
+                editorFocused: false,
+                displayPopover: false
+            });
+        }, 50);
     }
 
     onFocus() {
-        store.editorFocused = true;
+        this.setState({
+            editorFocused: true
+        });
         store.inTransitionToFocus = true;
     }
 
@@ -229,7 +243,6 @@ const styles = {
     popover: {
         position: 'absolute',
         background: 'white',
-        border: '1px solid black',
-        // padding: '6px'
+        border: '1px solid black'
     },
 };
