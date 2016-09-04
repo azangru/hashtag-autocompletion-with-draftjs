@@ -51,6 +51,7 @@ export default class DescriptionField extends Component {
         this.onDownArrow = this.onDownArrow.bind(this);
         this.onUpArrow = this.onUpArrow.bind(this);
         this.onEnter = this.onEnter.bind(this);
+        this.onEscape = this.onEscape.bind(this);
         this.onBlur = this.onBlur.bind(this);
         this.onFocus = this.onFocus.bind(this);
     }
@@ -62,11 +63,15 @@ export default class DescriptionField extends Component {
         const hashtagInfo = locateHashtagInText(editorState, store);
         this.hashtagInfo = hashtagInfo;
 
-        if (store.editorFocused && hashtagInfo && store.hashtagsInText[hashtagInfo.originalKey]) {
-            getAutocompleteSuggestions(hashtagInfo.search).then((data) => {
-                return this.openPopover(data[1], hashtagInfo.originalKey);
+        if (store.editorFocused &&
+            hashtagInfo &&
+            hashtagInfo.originalKey !== store.escapeKey &&
+            store.hashtagsInText[hashtagInfo.originalKey]) {
+                getAutocompleteSuggestions(hashtagInfo.search).then((data) => {
+                    return this.openPopover(data[1], hashtagInfo.originalKey);
             });
         } else {
+            !hashtagInfo && (store.escapeKey = undefined);
             this.closePopover();
         }
     }
@@ -120,14 +125,20 @@ export default class DescriptionField extends Component {
         return true;
     }
 
-    onFocus() {
-        store.editorFocused = true;
+    onEscape(keyboardEvent) {
+        keyboardEvent.preventDefault();
+        store.escapeKey = this.hashtagInfo.originalKey;
+        this.closePopover();
     }
 
-    // initially, tried to use store the editorFocused property in the state by doing this.setState,
-    // but setState is asynchronous, so I chose a synchronous mechanism
+    // initially, tried to store the editorFocused property in the component’s state
+    // by doing this.setState, but .setState() is asynchronous, so I chose a synchronous mechanism
     onBlur() {
         store.editorFocused = false;
+    }
+
+    onFocus() {
+        store.editorFocused = true;
     }
 
     render() {
@@ -141,6 +152,7 @@ export default class DescriptionField extends Component {
                     onDownArrow: this.onDownArrow,
                     onUpArrow: this.onUpArrow,
                     handleReturn: this.onEnter,
+                    onEscape: this.onEscape,
                     onBlur: this.onBlur,
                     onFocus: this.onFocus
                 };
@@ -149,6 +161,7 @@ export default class DescriptionField extends Component {
                     onDownArrow: undefined,
                     onUpArrow: undefined,
                     handleReturn: undefined,
+                    onEscape: undefined,
                     onBlur: this.onBlur,
                     onFocus: this.onFocus
                 };
