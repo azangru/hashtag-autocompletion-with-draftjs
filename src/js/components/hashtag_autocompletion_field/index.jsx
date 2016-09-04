@@ -58,17 +58,26 @@ export default class DescriptionField extends Component {
 
     onChange(editorState) {
         this.setState({editorState});
-        // this.setState({content: editorState.getCurrentContent().getPlainText()})
 
         const hashtagInfo = locateHashtagInText(editorState, store);
         this.hashtagInfo = hashtagInfo;
+
+        // focusing on the editor will trigger two onChange events;
+        // we need to discard the first one
+        // otherwise the popover with autocomplete suggestions may show
+        // when the user has focused on a hashtag, then leaves the editor,
+        // then focuses on a non-hashtag word
+        if (store.inTransitionToFocus) {
+            store.inTransitionToFocus = false;
+            return;
+        }
 
         if (store.editorFocused &&
             hashtagInfo &&
             hashtagInfo.originalKey !== store.escapeKey &&
             store.hashtagsInText[hashtagInfo.originalKey]) {
                 getAutocompleteSuggestions(hashtagInfo.search).then((data) => {
-                    return this.openPopover(data[1], hashtagInfo.originalKey);
+                    return this.openPopover(data, hashtagInfo.originalKey);
             });
         } else {
             !hashtagInfo && (store.escapeKey = undefined);
@@ -96,6 +105,7 @@ export default class DescriptionField extends Component {
     }
 
     onHashtagClick(fullHashtag) {
+        console.log('hey!')
         const newEditorState = insertHashtag(fullHashtag, this.hashtagInfo, this.state.editorState);
         this.setState({editorState: newEditorState});
     }
@@ -139,6 +149,7 @@ export default class DescriptionField extends Component {
 
     onFocus() {
         store.editorFocused = true;
+        store.inTransitionToFocus = true;
     }
 
     render() {
