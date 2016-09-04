@@ -112,7 +112,7 @@ module.exports = (env) => {
     if (env.prod) {
         plugins = plugins.concat(prodPlugins);
     } else {
-        config.devtool = 'source-map';
+        config.devtool = 'inline-source-map';
     }
 
     config.plugins = plugins;
