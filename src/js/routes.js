@@ -20,15 +20,15 @@ export default {
         {
             path: '/',
             getComponent(location, cb) {
-                System.import('./modules/showcase/Showcase.jsx')
+                System.import('./modules/main/Main.jsx')
                     .then(loadRoute(cb))
                     .catch(errorLoading);
             }
         },
         {
-            path: 'uploader',
+            path: 'hashtag-autocompletion-demo',
             getComponent(location, cb) {
-                System.import('./modules/uploader/Uploader.jsx')
+                System.import('./modules/hashtag-autocompletion-demo/DemoPage.jsx')
                     .then(loadRoute(cb))
                     .catch(errorLoading);
             }

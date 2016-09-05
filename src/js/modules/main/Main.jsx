@@ -11,7 +11,7 @@ export class Uploader extends Component {
         return (
             <div>
                 This is the main page <br />
-                <Link to={'/uploader'}>Check out the page with hashtag autocompletion</Link>
+            <Link to={'/hashtag-autocompletion-demo'}>Check out the page with hashtag autocompletion</Link>
             </div>
         );
     }
