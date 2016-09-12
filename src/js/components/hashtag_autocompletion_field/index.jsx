@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Editor, EditorState, CompositeDecorator, ContentState} from 'draft-js';
+import {Editor, EditorState, CompositeDecorator, ContentState, SelectionState} from 'draft-js';
 import decorateComponentWithProps from './utils/decorate_component_with_props';
 import getAutocompleteSuggestions from './utils/getAutocompleteSuggestions';
 import insertHashtag from './utils/insert_hashtag';
@@ -152,13 +152,25 @@ export default class DescriptionField extends Component {
         if (store.clickedOnHashtag) {
             e.preventDefault();
             store.clickedOnHashtag = false;
-            this.refs.editor.focus();            
+            this.refs.editor.focus();
+
+            var newState = EditorState.forceSelection(this.state.editorState, new SelectionState({
+                anchorKey: this.hashtagInfo.decodedKey.blockKey,
+                anchorOffset: this.hashtagInfo.end,
+                focusKey: this.hashtagInfo.decodedKey.blockKey,
+                focusOffset: this.hashtagInfo.end
+            }));
+
+            this.setState({
+                editorState: newState
+            });
+
             return;
         } else {
             this.setState({
                 displayPopover: false
             });
-            store.editorFocused = false;            
+            store.editorFocused = false;
         }
     }
 
@@ -193,7 +205,7 @@ export default class DescriptionField extends Component {
                 };
             }
         })();
-        
+
         return (
             <div>
                 <h1>Test Page</h1>
