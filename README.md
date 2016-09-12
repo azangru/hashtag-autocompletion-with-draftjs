@@ -1,6 +1,6 @@
 This is just an exercise for getting to know Draft.js editor by creating a text field component capable of providing suggestions for hashtag autocompletion.
 
-The component reacts to a text fragment that starts with a hash (#) by opening a popup menu with 10 suggestions fetched from the Wikipedia API. When selected, a suggestion will replace the beginning of the hash tag that triggered the opening of the popup menu. A suggestion can be selected by clicking on it with a mouse or by pressing up or down arrow keys and then pressing Enter.
+The component reacts to a text fragment that starts with a hash (#) by opening a popup menu with 10 suggestions fetched from the Wikipedia API. When selected, a suggestion will replace the beginning of the hash tag that triggered the opening of the popup menu. A suggestion can be selected by clicking on it with a mouse or by pressing up or down arrow keys and then pressing Enter. Here is a [demo](https://azangru.github.io/hashtag-autocompletion-with-draftjs/).
 
 To run the project, execute the following commands:
 
