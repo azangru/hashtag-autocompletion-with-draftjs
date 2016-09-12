@@ -4,7 +4,7 @@ const HashtagSuggestion = (props) => {
 
     return (
         <div
-            onClick={ () => props.onHashtagClick(props.suggestion) }
+            onMouseDown={ () => props.onHashtagClick(props.suggestion) }
             className={props.isFocused ? 'hashtag-suggestion active' : 'hashtag-suggestion'}
         >
             {props.suggestion}
