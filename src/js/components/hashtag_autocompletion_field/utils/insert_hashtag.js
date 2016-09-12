@@ -7,7 +7,7 @@ const insertHashtag = (fullHashtag, hashtagInfo, editorState) => {
         focusOffset: hashtagInfo.end
     });
     const trimmedHashtag = fullHashtag.replace(/\s/g, ''); // because hashtags don't have spaces
-    let replacedContent = Modifier.replaceText(contentState, selectionState, `#${trimmedHashtag}`);
+    let replacedContent = Modifier.replaceText(contentState, selectionState, `#${trimmedHashtag} `);
     const newEditorState = EditorState.push(
         editorState,
         replacedContent,

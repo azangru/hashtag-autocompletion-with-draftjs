@@ -16,7 +16,8 @@ const callbacks = {
 const store = {
     // a dictionary of hashtags, by their block keys
     hashtagsInText: {},
-    editorFocused: true
+    editorFocused: true,
+    clickedOnHashtag: false
 };
 
 const hashtagWrapperProps = {
@@ -42,7 +43,6 @@ export default class DescriptionField extends Component {
             editorState: EditorState.createWithContent(contentState, compositeDecorator),
             autocompleteSuggestions: [],
             focusedHashtagIndex: 0,
-            editorFocused: true,
             styles: styles
         };
         this.onChange = this.onChange.bind(this);
@@ -72,7 +72,7 @@ export default class DescriptionField extends Component {
             return;
         }
 
-        if (this.state.editorFocused &&
+        if (store.editorFocused &&
             hashtagInfo &&
             hashtagInfo.originalKey !== store.escapeKey &&
             store.hashtagsInText[hashtagInfo.originalKey]) {
@@ -105,16 +105,14 @@ export default class DescriptionField extends Component {
     }
 
     onHashtagClick(fullHashtag) {
+        store.clickedOnHashtag = true;
+        store.clickedHashtag = fullHashtag;
         const newEditorState = insertHashtag(fullHashtag, this.hashtagInfo, this.state.editorState);
         this.setState({
-            editorState: newEditorState
+            editorState: newEditorState,
         });
-        setTimeout(() => {
-            this.setState({
-                editorFocused: true,
-            });
-        }, 50);
-
+        store.editorFocused = true;
+        this.closePopover();
     }
 
     onUpArrow(keyboardEvent) {
@@ -143,26 +141,29 @@ export default class DescriptionField extends Component {
     }
 
     onEscape(keyboardEvent) {
-        keyboardEvent.preventDefault();
+        keyboardEvent && keyboardEvent.preventDefault();
         store.escapeKey = this.hashtagInfo.originalKey;
         this.closePopover();
     }
 
     // initially, tried to store the editorFocused property in the component’s state
     // by doing this.setState, but .setState() is asynchronous, so I chose a synchronous mechanism
-    onBlur() {
-        setTimeout(() => {
+    onBlur(e) {
+        if (store.clickedOnHashtag) {
+            e.preventDefault();
+            store.clickedOnHashtag = false;
+            this.refs.editor.focus();            
+            return;
+        } else {
             this.setState({
-                editorFocused: false,
                 displayPopover: false
             });
-        }, 50);
+            store.editorFocused = false;            
+        }
     }
 
     onFocus() {
-        this.setState({
-            editorFocused: true
-        });
+        store.editorFocused = true;
         store.inTransitionToFocus = true;
     }
 
@@ -192,7 +193,7 @@ export default class DescriptionField extends Component {
                 };
             }
         })();
-
+        
         return (
             <div>
                 <h1>Test Page</h1>
@@ -202,16 +203,14 @@ export default class DescriptionField extends Component {
                         onChange={this.onChange}
                         stripPastedStyles={true}
                         {... additionalProps}
+                        ref="editor"
                     />
-                    { this.state.displayPopover ? (
-                        <HashtagBox
-                            style={popoverStyles}
-                            suggestions={this.state.autocompleteSuggestions}
-                            onHashtagClick={this.onHashtagClick}
-                            focusedHashtagIndex={this.state.focusedHashtagIndex}
-                         />
-                        ) : null
-                    }
+                    <HashtagBox
+                        style={this.state.displayPopover ? popoverStyles : Object.assign({display: 'none'}, popoverStyles)}
+                        suggestions={this.state.autocompleteSuggestions}
+                        onHashtagClick={this.onHashtagClick}
+                        focusedHashtagIndex={this.state.focusedHashtagIndex}
+                     />
                 </div>
                 <div style={{"whiteSpace": "pre-wrap"}}>{this.state.content}</div>
             </div>
