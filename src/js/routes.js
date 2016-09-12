@@ -26,7 +26,7 @@ export default {
             }
         },
         {
-            path: 'hashtag-autocompletion-demo',
+            path: 'hashtag-autocompletion-with-draftjs',
             getComponent(location, cb) {
                 System.import('./modules/hashtag-autocompletion-demo/DemoPage.jsx')
                     .then(loadRoute(cb))
