@@ -56,6 +56,18 @@ export default class DescriptionField extends Component {
         this.onFocus = this.onFocus.bind(this);
     }
 
+    componentDidUpdate () {
+        if(store.clickedOnHashtag) {
+            // Chrome will focus on the Editor element; Firefox won’t
+            this.refs.editor.focus();
+
+            // This is obviously wrong! I should be able to set store.clickedOnHashtag
+            // to false now, but if I do so, even Chrome stops focusing on the Editor
+
+            // store.clickedOnHashtag = false;
+        }
+    }
+
     onChange(editorState) {
         this.setState({editorState});
 
@@ -148,25 +160,8 @@ export default class DescriptionField extends Component {
 
     // initially, tried to store the editorFocused property in the component’s state
     // by doing this.setState, but .setState() is asynchronous, so I chose a synchronous mechanism
-    onBlur(e) {
-        if (store.clickedOnHashtag) {
-            e.preventDefault();
-            store.clickedOnHashtag = false;
-            this.refs.editor.focus();
-
-            var newState = EditorState.forceSelection(this.state.editorState, new SelectionState({
-                anchorKey: this.hashtagInfo.decodedKey.blockKey,
-                anchorOffset: this.hashtagInfo.end,
-                focusKey: this.hashtagInfo.decodedKey.blockKey,
-                focusOffset: this.hashtagInfo.end
-            }));
-
-            this.setState({
-                editorState: newState
-            });
-
-            return;
-        } else {
+    onBlur() {
+        if (!store.clickedOnHashtag) {
             this.setState({
                 displayPopover: false
             });
