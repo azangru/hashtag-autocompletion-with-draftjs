@@ -58,13 +58,12 @@ export default class DescriptionField extends Component {
 
     componentDidUpdate () {
         if(store.clickedOnHashtag) {
-            // Chrome will focus on the Editor element; Firefox won’t
-            this.refs.editor.focus();
-
-            // This is obviously wrong! I should be able to set store.clickedOnHashtag
-            // to false now, but if I do so, even Chrome stops focusing on the Editor
-
-            // store.clickedOnHashtag = false;
+            setTimeout(() => {
+                // there is some black magic going on with asynchronous stuff,
+                // so need to dump the following method to the end of the event loop
+                this.refs.editor.focus();
+            }, 0);
+            store.clickedOnHashtag = false;
         }
     }
 
