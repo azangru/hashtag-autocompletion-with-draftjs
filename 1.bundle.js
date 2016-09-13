@@ -1,6 +1,6 @@
 webpackJsonp([1],{
 
-/***/ 269:
+/***/ 272:
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8,8 +8,8 @@ webpackJsonp([1],{
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_router__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_router___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_router__);
-
-/* harmony export */ __webpack_require__.d(exports, "Uploader", function() { return Uploader; });var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+/* harmony export (binding) */ __webpack_require__.d(exports, "Uploader", function() { return Uploader; });
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -26,7 +26,7 @@ var Uploader = function (_Component) {
     function Uploader(props) {
         _classCallCheck(this, Uploader);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Uploader).call(this, props));
+        return _possibleConstructorReturn(this, (Uploader.__proto__ || Object.getPrototypeOf(Uploader)).call(this, props));
     }
 
     _createClass(Uploader, [{
@@ -39,7 +39,7 @@ var Uploader = function (_Component) {
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     __WEBPACK_IMPORTED_MODULE_1_react_router__["Link"],
-                    { to: '/hashtag-autocompletion-demo' },
+                    { to: '/hashtag-autocompletion-with-draftjs' },
                     'Check out the page with hashtag autocompletion'
                 )
             );
@@ -54,4 +54,4 @@ var Uploader = function (_Component) {
 /***/ }
 
 });
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL21haW4vTWFpbi5qc3giXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7Ozs7OztBQUFBO0FBQ0E7O0FBRUEsSUFBYSxRQUFiO0FBQUE7O0FBRUksc0JBQVksS0FBWixFQUFtQjtBQUFBOztBQUFBLDJGQUNULEtBRFM7QUFFbEI7O0FBSkw7QUFBQTtBQUFBLGlDQU1hO0FBQ0wsbUJBQ0k7QUFBQTtBQUFBO0FBQUE7QUFDMEIsdUZBRDFCO0FBRUE7QUFBQyxzRUFBRDtBQUFBLHNCQUFNLElBQUksOEJBQVY7QUFBQTtBQUFBO0FBRkEsYUFESjtBQU1IO0FBYkw7O0FBQUE7QUFBQSxFQUE4QixnREFBOUI7O0FBaUJBLGtEQUFlLFFBQWYsQyIsImZpbGUiOiIxLmJ1bmRsZS5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCwge0NvbXBvbmVudH0gZnJvbSAncmVhY3QnO1xuaW1wb3J0IHsgTGluayB9IGZyb20gJ3JlYWN0LXJvdXRlcic7XG5cbmV4cG9ydCBjbGFzcyBVcGxvYWRlciBleHRlbmRzIENvbXBvbmVudCB7XG5cbiAgICBjb25zdHJ1Y3Rvcihwcm9wcykge1xuICAgICAgICBzdXBlcihwcm9wcyk7XG4gICAgfVxuXG4gICAgcmVuZGVyKCkge1xuICAgICAgICByZXR1cm4gKFxuICAgICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgICAgICBUaGlzIGlzIHRoZSBtYWluIHBhZ2UgPGJyIC8+XG4gICAgICAgICAgICA8TGluayB0bz17Jy9oYXNodGFnLWF1dG9jb21wbGV0aW9uLWRlbW8nfT5DaGVjayBvdXQgdGhlIHBhZ2Ugd2l0aCBoYXNodGFnIGF1dG9jb21wbGV0aW9uPC9MaW5rPlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICk7XG4gICAgfVxufVxuXG5cbmV4cG9ydCBkZWZhdWx0IFVwbG9hZGVyO1xuXG5cblxuLy8gV0VCUEFDSyBGT09URVIgLy9cbi8vIC4vbW9kdWxlcy9tYWluL01haW4uanN4Il0sInNvdXJjZVJvb3QiOiIifQ==
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL21haW4vTWFpbi5qc3giXSwibmFtZXMiOlsiVXBsb2FkZXIiLCJwcm9wcyJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7Ozs7OztBQUFBO0FBQ0E7O0FBRUEsSUFBYUEsUUFBYjtBQUFBOztBQUVJLHNCQUFZQyxLQUFaLEVBQW1CO0FBQUE7O0FBQUEsbUhBQ1RBLEtBRFM7QUFFbEI7O0FBSkw7QUFBQTtBQUFBLGlDQU1hO0FBQ0wsbUJBQ0k7QUFBQTtBQUFBO0FBQUE7QUFDMEIsdUZBRDFCO0FBRUE7QUFBQyxzRUFBRDtBQUFBLHNCQUFNLElBQUksc0NBQVY7QUFBQTtBQUFBO0FBRkEsYUFESjtBQU1IO0FBYkw7O0FBQUE7QUFBQSxFQUE4QixnREFBOUI7O0FBaUJBLGtEQUFlRCxRQUFmLEMiLCJmaWxlIjoiMS5idW5kbGUuanMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QsIHtDb21wb25lbnR9IGZyb20gJ3JlYWN0JztcbmltcG9ydCB7IExpbmsgfSBmcm9tICdyZWFjdC1yb3V0ZXInO1xuXG5leHBvcnQgY2xhc3MgVXBsb2FkZXIgZXh0ZW5kcyBDb21wb25lbnQge1xuXG4gICAgY29uc3RydWN0b3IocHJvcHMpIHtcbiAgICAgICAgc3VwZXIocHJvcHMpO1xuICAgIH1cblxuICAgIHJlbmRlcigpIHtcbiAgICAgICAgcmV0dXJuIChcbiAgICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICAgICAgVGhpcyBpcyB0aGUgbWFpbiBwYWdlIDxiciAvPlxuICAgICAgICAgICAgPExpbmsgdG89eycvaGFzaHRhZy1hdXRvY29tcGxldGlvbi13aXRoLWRyYWZ0anMnfT5DaGVjayBvdXQgdGhlIHBhZ2Ugd2l0aCBoYXNodGFnIGF1dG9jb21wbGV0aW9uPC9MaW5rPlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICk7XG4gICAgfVxufVxuXG5cbmV4cG9ydCBkZWZhdWx0IFVwbG9hZGVyO1xuXG5cblxuLy8gV0VCUEFDSyBGT09URVIgLy9cbi8vIC4vbW9kdWxlcy9tYWluL01haW4uanN4Il0sInNvdXJjZVJvb3QiOiIifQ==
