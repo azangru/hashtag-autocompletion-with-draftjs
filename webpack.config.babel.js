@@ -11,7 +11,6 @@ module.exports = (env) => {
 
     // ОСНОВНЫЕ НАСТРОЙКИ
     const config = {
-        debug: false,
         context: resolve('src/js'),
         entry: {
             javascript: './index.js',
@@ -23,11 +22,11 @@ module.exports = (env) => {
             filename: 'bundle.js'
         },
         module: {
-            loaders: [
+            rules: [
                 {
                     test: /\.jsx?$/,
                     exclude: /node_modules/,
-                    loader: 'babel',
+                    loader: 'babel-loader',
                     query: {
                         // настройки бабеля для вебпака отличаются от общих настроек бабеля
                         // в .babelrc (которые будет использовать Node во время тестов)
@@ -54,13 +53,8 @@ module.exports = (env) => {
             ]
         },
         resolve: {
-            extensions: ['', '.js', '.jsx']
+            extensions: ['.js', '.jsx']
         },
-        postcss: [
-            autoprefixer({
-                browsers: ['>1%']
-            })
-        ],
         plugins: plugins
     };
 
